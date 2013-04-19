@@ -1,0 +1,7 @@
+<?php
+
+Autoloader::add_cors_namespace('Fulentd');
+
+Autoloader::add_classes(array(
+		//'Fluentd\\Logger' => __DIR__.'classes/Logger.php',
+));
