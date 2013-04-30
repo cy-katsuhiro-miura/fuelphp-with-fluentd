@@ -1,30 +1,33 @@
 <?php
-require_once APPPATH.'vendor/Fluent/Autoloader.php';
-use Fluent\Logger\FluentLogger;
-class Observer_Td extends Orm\Observer {
 
-	public function after_save(Orm\Model $obj){
-		//ここでいっかい\Log::debug()しないと初回log_confが読めない
-		//あとで直す
-		\Log::debug(__FUNCTION__);
+namespace Fluentd;
+
+class Observer_Td extends \Orm\Observer {
+
+	public $td_config;
+
+	public function __construct($class)
+	{
+		\Config::load('td', true);
+		$this->td_config = \Config::get('td');
+	}
+	public function after_save(\Orm\Model $obj)
+	{
 
 		$save_data = array();
 		foreach(array_keys($obj->properties()) as $p){
 			$save_data[$p] = $obj->{$p};
 		}
 
-		//TODO 別Configちゃんと持つ＆Developの時どうするんですか？
-		$log_config = \Config::get('log');
-
-		$host = empty($log_config['td']['host']) ? null : $log_config['td']['host'];
-		$port = empty($log_config['td']['port']) ? null : $log_config['td']['port'];
-		$options = empty($log_config['td']['options']) ? array() : $log_config['td']['options'];
-		$packer = empty($log_config['td']['packer']) ? null : $log_config['td']['packer'];
-		$database = empty($log_config['td']['database']) ? 'default' : $log_config['td']['database'];
+		$host     = empty($this->td_config['td']['host'])     ? null      : $this->td_config['td']['host'];
+		$port     = empty($this->td_config['td']['port'])     ? null      : $this->td_config['td']['port'];
+		$options  = empty($this->td_config['td']['options'])  ? array()   : $this->td_config['td']['options'];
+		$packer   = empty($this->td_config['td']['packer'])   ? null      : $this->td_config['td']['packer'];
+		$database = empty($this->td_config['td']['database']) ? 'default' : $this->td_config['td']['database'];
 		$table_name = $obj->table();
 
-		Fluent\Autoloader::register();
-		$logger = new FluentLogger($host,$port,$options,$packer);
+		\Fluent\Autoloader::register();
+		$logger = new \Fluent\Logger\FluentLogger($host,$port,$options,$packer);
 		$res = $logger->post('td.'.$database.'.'.$table_name,$save_data);
 
 	}

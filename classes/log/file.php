@@ -1,8 +1,20 @@
 <?php
 
-class Log_File extends Fuel\Core\Log{
-	public static function write($level, $msg, $method = null){
-		if ($level > \Config::get('log_threshold'))
+namespace Fluentd\Log;
+
+class File extends \Fluentd\Log
+{
+
+	public static function write($level, $msg, $method = null)
+	{
+		$log_threshold = \Config::get('log_threshold');
+		$config = \Config::get('log',array());
+
+		if( isset($config['drivers']['file']['log_threshold']))
+		{
+			$log_threshold = $config['drivers']['file']['log_threshold'];
+		}
+		if ($level > $log_threshold)
 		{
 			return false;
 		}
@@ -14,7 +26,7 @@ class Log_File extends Fuel\Core\Log{
 		);
 		$level = isset($levels[$level]) ? $levels[$level] : $level;
 
-		if (Config::get('profiling'))
+		if (\Config::get('profiling'))
 		{
 			\Console::log($method.' - '.$msg);
 		}
@@ -49,16 +61,38 @@ class Log_File extends Fuel\Core\Log{
 			$call .= $method;
 		}else{
 			$backtrace = debug_backtrace();
-			if(isset($backtrace[4])){
-				$call .= isset($backtrace[4]['class']) ? $backtrace[4]['class'] : ' - ';
-				$call .= isset($backtrace[4]['type']) ? $backtrace[4]['type'] : ' - ';
-				$call .= isset($backtrace[4]['function']) ? $backtrace[4]['function'] : ' - ';
-				$call .= isset($backtrace[3]['line']) ? ':'.$backtrace[3]['line'] : ' - ';
+			$i=0;
+			for(;$i<count($backtrace);$i++){
+				$backtrace[$i]['object'] = null;
+				$break = false;
+
+				if(isset($backtrace[$i]['class'])){
+					if(!strstr($backtrace[$i]['class'],__NAMESPACE__)
+						and !strstr($backtrace[$i]['class'],'Fuel\Core\Log')) {
+	
+						//
+						if($level === 'Error'){
+							//if ($level == 'Error') var_dump($backtrace);
+						}
+						$break = true;
+					}
+				}
+
+				if($break){
+					break;
+				}
+			}
+			if(isset($backtrace[$i])){
+				$call .= isset($backtrace[$i]['class']) ? $backtrace[$i]['class'] : ' - ';
+				$call .= isset($backtrace[$i]['type']) ? $backtrace[$i]['type'] : ' - ';
+				$call .= isset($backtrace[$i]['function']) ? $backtrace[$i]['function'] : ' - ';
+				$call .= isset($backtrace[$i-1]['line']) ? ':'.$backtrace[$i-1]['line'] : ' - ';
 			}
 		}
 
 		$message .= $level.' '.(($level == 'info') ? ' -' : '-').' ';
 		$message .= date(\Config::get('log_date_format'));
+		$message .= ' - ' . 'ouid=' . parent::$opensocial_user_id;
 		$message .= ' --> '.(empty($call) ? '' : $call.' - ').$msg.PHP_EOL;
 
 		flock($fp, LOCK_EX);
