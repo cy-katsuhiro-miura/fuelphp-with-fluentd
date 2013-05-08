@@ -13,14 +13,8 @@ class Td extends \Fuel\Core\Log{
 		parent::_init();
 	}
 
-	public static function write($level, $msg, $method = null){
-
-		$host = empty($log_config['td']['host']) ? null : $log_config['td']['host'];
-		$port = empty($log_config['td']['port']) ? null : $log_config['td']['port'];
-		$options = empty($log_config['td']['options']) ? array() : $log_config['td']['options'];
-		$packer = empty($log_config['td']['packer']) ? null : $log_config['td']['packer'];
-		$database = empty($log_config['td']['database']) ? 'default' : $log_config['td']['database'];
-
+	public static function write($level, $msg, $method = null)
+	{
 		$log_threshold = \Config::get('log_threshold');
 		$config = \Config::get('log',array());
 
@@ -28,7 +22,7 @@ class Td extends \Fuel\Core\Log{
 		{
 			$log_threshold = $config['drivers']['td']['log_threshold'];
 		}
-		if ($level > \Config::get('log_threshold'))
+		if ($level > $log_threshold)
 		{
 			return false;
 		}
@@ -45,10 +39,15 @@ class Td extends \Fuel\Core\Log{
 			\Console::log($method.' - '.$msg);
 		}
 
+		$host     = empty($config['drivers']['td']['host'])     ? null      : $config['drivers']['td']['host'];
+		$port     = empty($config['drivers']['td']['port'])     ? null      : $config['drivers']['td']['port'];
+		$options  = empty($config['drivers']['td']['options'])  ? array()   : $config['drivers']['td']['options'];
+		$packer   = empty($config['drivers']['td']['packer'])   ? null      : $config['drivers']['td']['packer'];
+		$database = empty($config['drivers']['td']['database']) ? 'default' : $config['drivers']['td']['database'];
+
 		$logger = new \Fluent\Logger\FluentLogger($host,$port,$options,$packer);
 
 		$message  = array();
-
 
 		$call = array();
 		if ( ! empty($method))
@@ -79,10 +78,10 @@ class Td extends \Fuel\Core\Log{
 				}
 			}
 			if(isset($backtrace[$i])){
-				$call['class']    = isset($backtrace[$i]['class']) ? $backtrace[$i]['class'] : 'null';
-				$call['type']     = isset($backtrace[$i]['type']) ? $backtrace[$i]['type'] : 'null';
+				$call['class']    = isset($backtrace[$i]['class'])    ? $backtrace[$i]['class']    : 'null';
+				$call['type']     = isset($backtrace[$i]['type'])     ? $backtrace[$i]['type']     : 'null';
 				$call['function'] = isset($backtrace[$i]['function']) ? $backtrace[$i]['function'] : 'null';
-				$call['line']     = isset($backtrace[$i-1]['line']) ? $backtrace[$i-1]['line'] : 'null';
+				$call['line']     = isset($backtrace[$i-1]['line'])   ? $backtrace[$i-1]['line']   : 'null';
 			}
 		}
 

@@ -72,7 +72,7 @@ class File extends \Fluentd\Log
 	
 						//
 						if($level === 'Error'){
-							//if ($level == 'Error') var_dump($backtrace);
+							if ($level == 'Error') var_dump($backtrace);
 						}
 						$break = true;
 					}
@@ -83,10 +83,10 @@ class File extends \Fluentd\Log
 				}
 			}
 			if(isset($backtrace[$i])){
-				$call .= isset($backtrace[$i]['class']) ? $backtrace[$i]['class'] : ' - ';
-				$call .= isset($backtrace[$i]['type']) ? $backtrace[$i]['type'] : ' - ';
-				$call .= isset($backtrace[$i]['function']) ? $backtrace[$i]['function'] : ' - ';
-				$call .= isset($backtrace[$i-1]['line']) ? ':'.$backtrace[$i-1]['line'] : ' - ';
+				$call .= isset($backtrace[$i]['class'])    ? $backtrace[$i]['class']      : ' - ';
+				$call .= isset($backtrace[$i]['type'])     ? $backtrace[$i]['type']       : ' - ';
+				$call .= isset($backtrace[$i]['function']) ? $backtrace[$i]['function']   : ' - ';
+				$call .= isset($backtrace[$i-1]['line'])   ? ':'.$backtrace[$i-1]['line'] : ' - ';
 			}
 		}
 

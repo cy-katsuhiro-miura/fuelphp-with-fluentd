@@ -4,13 +4,15 @@ namespace Fluentd;
 
 class Observer_Td extends \Orm\Observer {
 
-	public $td_config;
+	public static $td_config;
 
 	public function __construct($class)
 	{
-		\Config::load('td', true);
-		$this->td_config = \Config::get('td');
+		\Config::load('observer', true);
+		$ob_config = \Config::get('observer');
+		self::$td_config = $ob_config['td'];
 	}
+
 	public function after_save(\Orm\Model $obj)
 	{
 
@@ -19,11 +21,11 @@ class Observer_Td extends \Orm\Observer {
 			$save_data[$p] = $obj->{$p};
 		}
 
-		$host     = empty($this->td_config['td']['host'])     ? null      : $this->td_config['td']['host'];
-		$port     = empty($this->td_config['td']['port'])     ? null      : $this->td_config['td']['port'];
-		$options  = empty($this->td_config['td']['options'])  ? array()   : $this->td_config['td']['options'];
-		$packer   = empty($this->td_config['td']['packer'])   ? null      : $this->td_config['td']['packer'];
-		$database = empty($this->td_config['td']['database']) ? 'default' : $this->td_config['td']['database'];
+		$host     = empty(self::$td_config['host'])     ? null      : self::$td_config['host'];
+		$port     = empty(self::$td_config['port'])     ? null      : self::$td_config['port'];
+		$options  = empty(self::$td_config['options'])  ? array()   : self::$td_config['options'];
+		$packer   = empty(self::$td_config['packer'])   ? null      : self::$td_config['packer'];
+		$database = empty(self::$td_config['database']) ? 'default' : self::$td_config['database'];
 		$table_name = $obj->table();
 
 		\Fluent\Autoloader::register();
