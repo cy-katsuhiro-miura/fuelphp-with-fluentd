@@ -7,10 +7,12 @@ observerを指定することで、dbの変更履歴情報をfluentdに出力で
 #installation
 ##Download 
 GitHubからソースをDownloadした後、fuel/packages/の下に展開してください。
+
 	$ git clone git@github.com:katsuhiro-miura/fuelphp-with-fluentd.git 
 	$ cp -r fuelphp-with-fluentd fuel/packages/fluentd
 
 サブモジュールで指定していただいても構いません。(自分の環境ではうまく動きませんでしたが)
+
 	$ git submodule add git@github.com:katsuhiro-miura/fuelphp-with-fluentd.git fuel/packages/fluentd
 	$ git submodule update --init fuel/packages/fluentd
 
@@ -31,11 +33,12 @@ configファイルでpluentdへの出力方法を定義しています。
 #How to use
 ##Edit config file
 	$ vi app/config/config.php
-
+```php
 	'packages' => array(
 		'orm',
 		'fluentd',
 	),
+```
 
 ##Edit log class file
 Fluentd\Logを継承したLogクラスを作成し、
@@ -43,6 +46,7 @@ Fluentd\Logを継承したLogクラスを作成し、
 
 	vi class/log.php
 
+```php
 	<?php
 	class Log.php extend Fluentd\Log {
 	}
@@ -55,6 +59,7 @@ Fluentd\Logを継承したLogクラスを作成し、
 	{
 		\Log::debug(__FUNCTION__);
 	}
+```
 
 
 ##Edit ORM model file
@@ -62,7 +67,8 @@ ORMパッケージを使用している場合、
 Observerを指定することで、そのタイミングでのdbの値をfluentdに出力します。
 
 	vi model/model.php
-	
+
+```php
 	class model {
 	        protected static $_observers = array(
 	                'Fluentd\Observer_Td' => array(
@@ -70,3 +76,4 @@ Observerを指定することで、そのタイミングでのdbの値をfluentd
 	                ),
 			);		
 	}
+```
