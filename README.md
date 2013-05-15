@@ -1,28 +1,28 @@
 #about
-fuelphp$B$+$i(Bfluentd$B$rMxMQ$9$k$?$a$N%Q%C%1!<%8$G$9!#(B
-logger$B$r3HD%$7$F!"(Bfluentd$B$K=PNO$G$-$k$h$&$K$7$F$$$^$9!#(B
-$BKt!"(BORM$B%Q%C%1!<%8$r;HMQ$7$F$$$k>l9g!"(B
-observer$B$r;XDj$9$k$3$H$G!"(Bdb$B$NJQ99MzNr>pJs$r(Bfluentd$B$K=PNO$G$-$^$9!#(B
+fuelphpからfluentdを利用するためのパッケージです。
+loggerを拡張して、fluentdに出力できるようにしています。
+又、ORMパッケージを使用している場合、
+observerを指定することで、dbの変更履歴情報をfluentdに出力できます。
 
 #installation
 ##Download 
-GitHub$B$+$i%=!<%9$r(BDownload$B$7$?8e!"(Bfuel/packages/$B$N2<$KE83+$7$F$/$@$5$$!#(B
+GitHubからソースをDownloadした後、fuel/packages/の下に展開してください。
 	$ git clone git@github.com:katsuhiro-miura/fuelphp-with-fluentd.git 
 	$ cp -r fuelphp-with-fluentd fuel/packages/fluentd
 
-$B%5%V%b%8%e!<%k$G;XDj$7$F$$$?$@$$$F$b9=$$$^$;$s!#(B($B<+J,$N4D6-$G$O$&$^$/F0$-$^$;$s$G$7$?$,(B)
+サブモジュールで指定していただいても構いません。(自分の環境ではうまく動きませんでしたが)
 	$ git submodule add git@github.com:katsuhiro-miura/fuelphp-with-fluentd.git fuel/packages/fluentd
 	$ git submodule update --init fuel/packages/fluentd
 
 ##Using fluent-logger-php
-PHP$B$+$i(Bfluentd$B$X$N=PNO$O(Bfluentd$B$,Ds6!$7$F$$$k(B'fluent-logger-php'$B%i%$%V%i%j$rMxMQ$7$F$$$^$9!#(B
-$B%Q%C%1!<%8$NCf?H$K$b4^$^$l$F$$$^$9$,!":G?7HG$O0J2<$+$i<hF@$7$F$/$@$5$$!#(B
+PHPからfluentdへの出力はfluentdが提供している'fluent-logger-php'ライブラリを利用しています。
+パッケージの中身にも含まれていますが、最新版は以下から取得してください。
 
 	$ git clone https://github.com/fluent/fluent-logger-php.git
 	$ cp -r src/Fluent vendor/
 
 ##Copy config file
-config$B%U%!%$%k$G(Bpluentd$B$X$N=PNOJ}K!$rDj5A$7$F$$$^$9!#(B
+configファイルでpluentdへの出力方法を定義しています。
 
 	$ cp config/log.php app/config
 	$ cp config/observer.php app/config
@@ -38,8 +38,8 @@ config$B%U%!%$%k$G(Bpluentd$B$X$N=PNOJ}K!$rDj5A$7$F$$$^$9!#(B
 	),
 
 ##Edit log class file
-Fluentd\Log$B$r7Q>5$7$?(BLog$B%/%i%9$r:n@.$7!"(B
-$B3F%a%=%C%I$r;HMQ$7$F$/$@$5$$!#(B
+Fluentd\Logを継承したLogクラスを作成し、
+各メソッドを使用してください。
 
 	vi class/log.php
 
@@ -58,8 +58,8 @@ Fluentd\Log$B$r7Q>5$7$?(BLog$B%/%i%9$r:n@.$7!"(B
 
 
 ##Edit ORM model file
-ORM$B%Q%C%1!<%8$r;HMQ$7$F$$$k>l9g!"(B
-Observer$B$r;XDj$9$k$3$H$G!"$=$N%?%$%_%s%0$G$N(Bdb$B$NCM$r(Bfluentd$B$K=PNO$7$^$9!#(B
+ORMパッケージを使用している場合、
+Observerを指定することで、そのタイミングでのdbの値をfluentdに出力します。
 
 	vi model/model.php
 	
