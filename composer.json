@@ -1,0 +1,14 @@
+{
+    "name": "cy-katsuhiro-miura/fuelphp-with-fluentd",
+    "description": "fuelphp ",
+    "keywords": ["fuelphp", "fluentd"],
+    "homepage": "http://github.com/cy-katsuhiro-miura/fuelphp-with-fluentd",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Katsuhiro Miura",
+            "homepage": "http://github.com/cy-katsuhiro-miura"
+        }
+    ]
+}
