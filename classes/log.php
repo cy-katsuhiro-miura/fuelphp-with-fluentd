@@ -33,7 +33,7 @@ class Log extends \Fuel\Core\Log
 		
 		try{
 			return $class::write($level,$msg,$method);
-		} catch (FuelException $e) {
+		} catch (\FuelException $e) {
 		}
 	}
 }

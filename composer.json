@@ -11,9 +11,4 @@
             "homepage": "http://github.com/cy-katsuhiro-miura"
         }
     ],
-   "provide": [
-        {
-            "fluentd":"*"
-        }
-   ]
 }
