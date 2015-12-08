@@ -1,3 +1,5 @@
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cy-katsuhiro-miura/fuelphp-with-fluentd/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cy-katsuhiro-miura/fuelphp-with-fluentd/?branch=master)
+
 #about
 fuelphpからfluentdを利用するためのパッケージです。
 loggerを拡張して、fluentdに出力できるようにしています。
