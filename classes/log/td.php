@@ -52,7 +52,6 @@ class Td extends \Fuel\Core\Log{
 		$call = array();
 		if ( ! empty($method))
 		{
-			//$call .= $method;
 			$call['method'] = $method;
 		}else{
 			$backtrace = debug_backtrace();
@@ -67,7 +66,7 @@ class Td extends \Fuel\Core\Log{
 	
 						//
 						if($level === 'Error'){
-							//if ($level == 'Error') var_dump($backtrace);
+							$msg = print_r($backtrace,true);
 						}
 						$break = true;
 					}
@@ -91,6 +90,9 @@ class Td extends \Fuel\Core\Log{
 	   	$message['call']  = $call;
 
 		$res = $logger->post('td.'.$database.'.fuel_log',$message);
+        if(!$res){
+            return false;
+        }
 
 		return true;
 	}
