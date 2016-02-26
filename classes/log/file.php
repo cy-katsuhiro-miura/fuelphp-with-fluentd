@@ -72,7 +72,7 @@ class File extends \Fluentd\Log
 	
 						//
 						if($level === 'Error'){
-							if ($level == 'Error') var_dump($backtrace);
+							if ($level == 'Error') //var_dump($backtrace);
 						}
 						$break = true;
 					}
